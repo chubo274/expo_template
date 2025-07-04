@@ -2,37 +2,45 @@ import EditScreenInfo from '@/src/components/EditScreenInfo';
 import { Text, View } from '@/src/components/Themed';
 import { useGetVideoList } from '@/src/data/hookApis/example';
 import ZustandPersist from '@/src/store/persist';
-import { useEffect } from 'react';
-import { ActivityIndicator, Button, ScrollView, StyleSheet } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 
 export default function TabOneScreen() {
   // Test API call
-  const { data: videoData, isLoading, error } = useGetVideoList({ page: 1, limit: 10 });
+  const {
+    data: videoData,
+    isLoading,
+    error,
+  } = useGetVideoList({ page: 1, limit: 10 });
 
-  useEffect(() => {
-    console.log('data', ZustandPersist.getState()?.Token);
-  }, []);
+  // useEffect(() => {
+  //   console.log('data', ZustandPersist.getState()?.Token);
+  // }, []);
 
-  useEffect(() => {
-    if (videoData) {
-      console.log('Video data loaded:', videoData);
-    }
-    if (error) {
-      console.error('Video data error:', error);
-    }
-  }, [videoData, error]);
+  // useEffect(() => {
+  //   if (videoData) {
+  //     console.log('Video data loaded:', videoData);
+  //   }
+  //   if (error) {
+  //     console.error('Video data error:', error);
+  //   }
+  // }, [videoData, error]);
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Tab One</Text>
-        
+
         {/* API Test Section */}
         <View style={styles.apiTestSection}>
           <Text style={styles.sectionTitle}>API Test - Video List</Text>
           {isLoading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#0000ff" />
+              <ActivityIndicator size='large' color='#0000ff' />
               <Text>Loading videos...</Text>
             </View>
           ) : error ? (
@@ -53,12 +61,18 @@ export default function TabOneScreen() {
           <Button
             title='Save Token'
             onPress={() => {
-              ZustandPersist.getState().save('Token', { token: '1234567890abcdef' });
+              ZustandPersist.getState().save('Token', {
+                token: '1234567890abcdef',
+              });
             }}
           />
         </View>
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        <EditScreenInfo path="app/(tabs)/index.tsx" />
+        <View
+          style={styles.separator}
+          lightColor='#eee'
+          darkColor='rgba(255,255,255,0.1)'
+        />
+        <EditScreenInfo path='app/(tabs)/index.tsx' />
       </View>
     </ScrollView>
   );

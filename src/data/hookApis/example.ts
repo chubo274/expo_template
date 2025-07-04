@@ -1,6 +1,6 @@
-import { AxiosError } from "axios";
-import { ResponseModel } from "../axios/interceptor/IResponseModel";
-import { useApiMutation, useApiQuery } from "../react-query/hooks";
+import { AxiosError } from 'axios';
+import { ResponseModel } from '../axios/interceptor/IResponseModel';
+import { useApiMutation, useApiQuery } from '../react-query/hooks';
 
 // Specific API hooks - examples using your URLs
 export const useGetUser = (userId: string) => {
@@ -21,14 +21,14 @@ export const useLogin = () => {
     { token: string; user: any },
     { email: string; password: string }
   >(
-    (variables) => ({
+    variables => ({
       method: 'POST',
       resource: '/store-api/mobile/account/login',
       body: variables,
     }),
     {
       onSuccess: (data: ResponseModel<{ token: string; user: any }>) => {
-        console.log('Login successful:', data);
+        console.info('Login successful:', data);
       },
       onError: (error: AxiosError<any>) => {
         console.error('Login failed:', error);
@@ -42,14 +42,14 @@ export const useSignup = () => {
     { success: boolean; user: any },
     { email: string; password: string; name: string }
   >(
-    (variables) => ({
+    variables => ({
       method: 'POST',
       resource: '/store-api/mobile/register',
       body: variables,
     }),
     {
       onSuccess: (data: ResponseModel<{ success: boolean; user: any }>) => {
-        console.log('Signup successful:', data);
+        console.info('Signup successful:', data);
       },
       onError: (error: AxiosError<any>) => {
         console.error('Signup failed:', error);
@@ -63,14 +63,14 @@ export const useUpdateUserProfile = () => {
     { success: boolean; user: any },
     { name?: string; email?: string; avatar?: any }
   >(
-    (variables) => ({
+    variables => ({
       method: 'PUT',
       resource: '/store-api/account/user-update',
       body: variables,
     }),
     {
       onSuccess: (data: ResponseModel<{ success: boolean; user: any }>) => {
-        console.log('Profile updated:', data);
+        console.info('Profile updated:', data);
       },
       onError: (error: AxiosError<any>) => {
         console.error('Profile updated:', error);
@@ -84,15 +84,17 @@ export const useUpdateUserAvatar = () => {
     { success: boolean; avatarUrl: string },
     { avatar: File | any }
   >(
-    (variables) => ({
+    variables => ({
       method: 'POSTFORM',
       resource: '/store-api/account/update-avatar',
       body: variables,
       isFormDataType: true,
     }),
     {
-      onSuccess: (data: ResponseModel<{ success: boolean; avatarUrl: string }>) => {
-        console.log('Avatar updated:', data);
+      onSuccess: (
+        data: ResponseModel<{ success: boolean; avatarUrl: string }>
+      ) => {
+        console.info('Avatar updated:', data);
       },
       onError: (error: AxiosError<any>) => {
         console.error('Avatar updated:', error);
@@ -102,28 +104,22 @@ export const useUpdateUserAvatar = () => {
 };
 
 export const useGetVideoList = (params?: any) => {
-  return useApiQuery<{ videos: any[]; total: number }>(
-    ['videos', params],
-    {
-      resource: '/store-api/video/list',
-      queryParams: params,
-    },
-  );
+  return useApiQuery<{ videos: any[]; total: number }>(['videos', params], {
+    resource: '/store-api/video/list',
+    queryParams: params,
+  });
 };
 
 export const useLikeVideo = () => {
-  return useApiMutation<
-    { success: boolean },
-    { videoId: string }
-  >(
-    (variables) => ({
+  return useApiMutation<{ success: boolean }, { videoId: string }>(
+    variables => ({
       method: 'POST',
       resource: '/store-api/video/likes',
       body: variables,
     }),
     {
       onSuccess: () => {
-        console.log('Video liked successfully');
+        console.info('Video liked successfully');
       },
     }
   );
