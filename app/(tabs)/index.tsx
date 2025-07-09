@@ -1,15 +1,15 @@
 import ImageSource from 'assets/images';
-import EditScreenInfo from 'components/EditScreenInfo';
 import { AppImage } from 'components/image';
-import { Text, View } from 'components/Themed';
+import { AppText } from 'components/text/AppText';
 import { useGetVideoList } from 'data/hookApis/example';
-import ZustandPersist from 'store/persist';
 import {
   ActivityIndicator,
   Button,
   ScrollView,
   StyleSheet,
+  View,
 } from 'react-native';
+import ZustandPersist from 'store/persist';
 
 export default function TabOneScreen() {
   // Test API call
@@ -35,7 +35,7 @@ export default function TabOneScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Tab One</Text>
+        <AppText style={styles.title}>Tab One</AppText>
         <AppImage
           source={ImageSource.icon}
           style={styles.image}
@@ -44,23 +44,29 @@ export default function TabOneScreen() {
 
         {/* API Test Section */}
         <View style={styles.apiTestSection}>
-          <Text style={styles.sectionTitle}>API Test - Video List</Text>
+          <AppText style={styles.sectionTitle}>API Test - Video List</AppText>
           {isLoading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size='large' color='#0000ff' />
-              <Text>Loading videos...</Text>
+              <AppText>Loading videos...</AppText>
             </View>
           ) : error ? (
             <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>Error: {error.message}</Text>
+              <AppText style={styles.errorAppText}>
+                Error: {error.message}
+              </AppText>
             </View>
           ) : videoData ? (
             <View style={styles.successContainer}>
-              <Text style={styles.successText}>✅ API Call Success!</Text>
-              <Text>Data loaded: {JSON.stringify(videoData, null, 2)}</Text>
+              <AppText style={styles.successAppText}>
+                ✅ API Call Success!
+              </AppText>
+              <AppText>
+                Data loaded: {JSON.stringify(videoData, null, 2)}
+              </AppText>
             </View>
           ) : (
-            <Text>No data</Text>
+            <AppText>No data</AppText>
           )}
         </View>
 
@@ -74,12 +80,7 @@ export default function TabOneScreen() {
             }}
           />
         </View>
-        <View
-          style={styles.separator}
-          lightColor='#eee'
-          darkColor='rgba(255,255,255,0.1)'
-        />
-        <EditScreenInfo path='app/(tabs)/index.tsx' />
+        <View style={styles.separator} />
       </View>
     </ScrollView>
   );
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffebee',
     borderRadius: 5,
   },
-  errorText: {
+  errorAppText: {
     color: '#d32f2f',
     fontWeight: 'bold',
   },
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8f5e8',
     borderRadius: 5,
   },
-  successText: {
+  successAppText: {
     color: '#2e7d32',
     fontWeight: 'bold',
     marginBottom: 10,

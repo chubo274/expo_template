@@ -1,7 +1,8 @@
 // Font assets index
-export const fonts = {
-  SpaceMono: require('./SpaceMono-Regular.ttf'),
-} as const;
+export enum FontName {
+  SpaceMono = 'SpaceMono',
+}
 
-// Export font names for type safety
-export type FontName = keyof typeof fonts;
+export const fonts = {
+  [FontName.SpaceMono]: require('./source/SpaceMono-Regular.ttf'),
+} as const;

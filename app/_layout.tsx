@@ -1,17 +1,15 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
-import { useColorScheme } from 'components/useColorScheme';
 import { fonts } from 'assets/fonts';
+import { AppToast } from 'components/toast/AppToast';
 import QueryProvider from 'data/react-query/queryClient';
 
 export {
@@ -52,16 +50,19 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <QueryProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-          <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
-        </Stack>
-      </ThemeProvider>
-    </QueryProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryProvider>
+        <AppToast />
+        <BottomSheetModalProvider>
+          <ThemeProvider value={DefaultTheme}>
+            <Stack>
+              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+              <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
+            </Stack>
+          </ThemeProvider>
+        </BottomSheetModalProvider>
+      </QueryProvider>
+    </GestureHandlerRootView>
   );
 }
