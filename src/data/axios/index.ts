@@ -1,4 +1,4 @@
-import ZustandPersist from '@/src/store/persist';
+import ZustandPersist from 'store/persist';
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
 import { baseUrl } from '../resource';

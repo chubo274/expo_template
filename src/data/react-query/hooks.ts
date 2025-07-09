@@ -1,5 +1,10 @@
-import ApiGateway, { IConfigRequest } from '@/src/data/axios';
-import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from '@tanstack/react-query';
+import ApiGateway, { IConfigRequest } from 'data/axios';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { ResponseModel } from '../axios/interceptor/IResponseModel';
 
@@ -10,16 +15,21 @@ interface ApiError {
 }
 
 // Helper function to make API calls using your custom ApiGateway
-const callApi = async <T = any>(request: IConfigRequest): Promise<ResponseModel<T>> => {
+const callApi = async <T = any>(
+  request: IConfigRequest
+): Promise<ResponseModel<T>> => {
   const response: ResponseModel<T> = await ApiGateway.execute(request);
-  return response
+  return response;
 };
 
 // Generic hooks for API calls
 export const useApiQuery = <T = any>(
   key: string | string[],
   request: Omit<IConfigRequest, 'method'>,
-  options?: Omit<UseQueryOptions<ResponseModel<T>, AxiosError<ApiError>>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<ResponseModel<T>, AxiosError<ApiError>>,
+    'queryKey' | 'queryFn'
+  >
 ) => {
   return useQuery<ResponseModel<T>, AxiosError<ApiError>>({
     queryKey: Array.isArray(key) ? key : [key],
@@ -30,10 +40,15 @@ export const useApiQuery = <T = any>(
 
 export const useApiMutation = <TData = any, TVariables = any>(
   requestBuilder: (variables: TVariables) => IConfigRequest,
-  options?: UseMutationOptions<ResponseModel<TData>, AxiosError<ApiError>, TVariables>
+  options?: UseMutationOptions<
+    ResponseModel<TData>,
+    AxiosError<ApiError>,
+    TVariables
+  >
 ) => {
   return useMutation<ResponseModel<TData>, AxiosError<ApiError>, TVariables>({
-    mutationFn: (variables: TVariables) => callApi<TData>(requestBuilder(variables)),
+    mutationFn: (variables: TVariables) =>
+      callApi<TData>(requestBuilder(variables)),
     ...options,
   });
 };

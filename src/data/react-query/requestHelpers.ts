@@ -1,4 +1,4 @@
-import { IConfigRequest, HTTPMethod } from '@/src/data/axios';
+import { IConfigRequest, HTTPMethod } from 'data/axios';
 
 // Helper functions to create request configs
 export const createGetRequest = (

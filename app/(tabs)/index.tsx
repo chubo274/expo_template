@@ -1,7 +1,9 @@
-import EditScreenInfo from '@/src/components/EditScreenInfo';
-import { Text, View } from '@/src/components/Themed';
-import { useGetVideoList } from '@/src/data/hookApis/example';
-import ZustandPersist from '@/src/store/persist';
+import ImageSource from 'assets/images';
+import EditScreenInfo from 'components/EditScreenInfo';
+import { AppImage } from 'components/image';
+import { Text, View } from 'components/Themed';
+import { useGetVideoList } from 'data/hookApis/example';
+import ZustandPersist from 'store/persist';
 import {
   ActivityIndicator,
   Button,
@@ -34,6 +36,11 @@ export default function TabOneScreen() {
     <ScrollView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Tab One</Text>
+        <AppImage
+          source={ImageSource.icon}
+          style={styles.image}
+          contentFit='contain'
+        />
 
         {/* API Test Section */}
         <View style={styles.apiTestSection}>
@@ -137,5 +144,11 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  image: {
+    width: 64,
+    height: 64,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
   },
 });
