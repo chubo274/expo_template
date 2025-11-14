@@ -1,68 +1,35 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+import { CustomHeader } from 'components/navigation/CustomHeader';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+import { configureLocalization, fallBackLanguage } from 'localization/index';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import 'react-native-reanimated';
-
-import { fonts } from 'assets/fonts';
-import { AppToast } from 'components/toast/AppToast';
-import QueryProvider from 'data/react-query/queryClient';
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import ThemeProvider from 'theme/index';
+import ZustandPersist from 'zustand/persist';
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: fonts.SpaceMono,
-    ...FontAwesome.font,
-  });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+  const customHeaderOptions = CustomHeader();
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const savedLanguage = ZustandPersist.getState()?.Localization || fallBackLanguage;
+    configureLocalization(savedLanguage);
+  }, []);
 
-  if (!loaded) {
-    return null;
-  }
-
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryProvider>
-        <AppToast />
-        <BottomSheetModalProvider>
-          <ThemeProvider value={DefaultTheme}>
-            <Stack>
-              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-              <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
-            </Stack>
-          </ThemeProvider>
-        </BottomSheetModalProvider>
-      </QueryProvider>
+      <ThemeProvider>
+        <Stack initialRouteName="index">
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="OnBoardingScreen" options={{ headerShown: false }} />
+          <Stack.Screen name="SigninStack" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="DetailToDoScreen"
+            options={{ ...customHeaderOptions, headerTitle: 'Detail To Do' }}
+          />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
     </GestureHandlerRootView>
   );
 }

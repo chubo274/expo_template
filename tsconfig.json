@@ -2,18 +2,23 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      // "@/*": ["./*"],
-      // "src/*": ["./src/*"],
-      "components/*": ["./src/components/*"],
-      "hooks/*": ["./src/hooks/*"],
-      "lib/*": ["./src/lib/*"],
-      "assets/*": ["./src/assets/*"],
-      "store/*": ["./src/store/*"],
-      "data/*": ["./src/data/*"],
-      "constants/*": ["./src/constants/*"]
+      "/*": ["app/*"],
+      "components/*": ["src/components/*"],
+      "assets/*": ["src/assets/*"],
+      "constants/*": ["src/constants/*"],
+      "hooks/*": ["src/hooks/*"],
+      "utils/*": ["src/utils/*"],
+      "theme/*": ["src/theme/*"],
+      "zustand/*": ["src/zustand/*"],
+      "localization/*": ["src/localization/*"],
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

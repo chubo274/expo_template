@@ -1,8 +1,1 @@
-# Run lint-staged for code formatting and linting
-bunx lint-staged
-
-# Run type checking
-bun run type-check
-
-# Run tests (optional - comment out if tests take too long)
-# bun test
+npx lint-staged

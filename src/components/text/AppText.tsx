@@ -1,35 +1,20 @@
-import { FontName } from 'assets/fonts';
-import React, { ReactNode } from 'react';
-import { StyleSheet, Text, TextProps } from 'react-native';
+import React, { ReactNode } from 'react'
+import { StyleSheet, Text, TextProps } from 'react-native'
 
 interface IAppText extends TextProps {
-  children: string | ReactNode;
-  /** Font family to use */
-  fontFamily?: FontName;
+  children: string | ReactNode,
 }
 
 export const AppText = React.memo((props: IAppText) => {
-  const { children, fontFamily = FontName.SpaceMono, style, ...rest } = props;
+  const { children, ...rest } = props
 
-  const styles = useStyles(fontFamily);
+  return <Text allowFontScaling={false} {...rest} style={[styles.defaultStyle, props.style]}>{children}</Text>
+})
 
-  return (
-    <Text
-      allowFontScaling={false}
-      {...rest}
-      style={[styles.defaultStyle, style]}
-    >
-      {children}
-    </Text>
-  );
-});
-
-const useStyles = (fontFamily: FontName) =>
-  StyleSheet.create({
-    defaultStyle: {
-      fontSize: 12,
-      color: 'black',
-      fontFamily,
-      fontWeight: 400,
-    },
-  });
+const styles = StyleSheet.create({
+  defaultStyle: {
+    fontSize: 14,
+    color: 'black',
+    fontWeight: 400,
+  }
+})
