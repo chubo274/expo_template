@@ -65,7 +65,7 @@ export default class DefaultInterceptor extends Interceptor {
         status = 500
         message = error?.message
       }
-    } catch (_error) {
+    } catch (error: any) {
       console.error('smt went wrong: ', error)
       // smt went wrong
       status = 500

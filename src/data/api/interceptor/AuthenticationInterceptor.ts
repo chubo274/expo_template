@@ -17,7 +17,7 @@ export default class AuthenticationInterceptor extends Interceptor {
      * @return {InternalAxiosRequestConfig}
      */
   requestFulfilled = (config: InternalAxiosRequestConfig) => {
-    const { Token } = ZustandPersist.getState()
+    const Token = ZustandPersist?.getState()?.Token;
 
     const contentType = config.headers['Content-Type']
     if (contentType === 'application/x-www-form-urlencoded') {

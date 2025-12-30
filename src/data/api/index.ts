@@ -73,11 +73,12 @@ class ApiGateway {
 
   execute = (config: IConfigRequest) => {
     const { method, resource, body, isFormDataType, params, queryParams, timeout, baseURL, isFormDataAddress } = config
-    const { Token, Localization } = ZustandPersist.getState()
+    const Token = ZustandPersist?.getState()?.Token;
+    const Localization = ZustandPersist?.getState()?.Localization;
 
     let data = body
     if (isFormDataType) { data = isFormDataAddress ? parseFormDataAddress(body) : parseFormData(body) }
-    if (method == 'GET') { data = undefined }
+    if (method === 'GET') { data = undefined }
     const headers = {
       'Accept': 'application/json',
       'Content-Type': isFormDataType ? 'multipart/form-data' : 'application/json', // Content-Type = 'application/json' == null

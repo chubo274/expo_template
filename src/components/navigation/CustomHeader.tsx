@@ -12,7 +12,7 @@ const CustomHeaderComponent = (props: NativeStackHeaderProps | BottomTabHeaderPr
   const theme = useAppTheme();
   const styles = useMemo(() => createStyles(theme), [theme]);
   const insets = useSafeAreaInsets();
-  const nameScreen = props?.route?.name;
+  const nameScreen = props?.options?.title;
   const headerLeft = props?.options?.headerLeft;
   const headerRight = props?.options?.headerRight;
 

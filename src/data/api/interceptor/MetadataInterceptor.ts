@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import Interceptor from './Interceptor';
 import { useApiLogStore } from '../debug/useApiLogStore';
 import { devMode } from '../resource';
+import Interceptor from './Interceptor';
 
 interface LocalMetaData {
   requestAt: string;
@@ -12,10 +12,6 @@ interface LocalMetaData {
 }
 
 export default class MetadataInterceptor extends Interceptor {
-  constructor() {
-    super();
-  }
-
   /**
    * Add request timestamp to config metadata
    * @param {InternalAxiosRequestConfig} config

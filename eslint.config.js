@@ -19,6 +19,9 @@ module.exports = defineConfig([
       'no-unused-expressions': 'off',
       'import/no-named-as-default-member': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
+      'react/no-unknown-property': 'off',
+      'eqeqeq': 'off',
+      '@typescript-eslint/no-useless-constructor': 'off',
     },
   },
 ]);

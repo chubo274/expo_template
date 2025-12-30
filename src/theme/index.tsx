@@ -1,6 +1,7 @@
 import { ModeTheme } from 'constants/enum';
 import React, { useCallback, useContext, useMemo } from 'react';
 import ZustandPersist from 'zustand/persist';
+import { useShallow } from 'zustand/react/shallow';
 import Default from './colors/default';
 import { IAppColor } from './colors/IAppColor';
 import Light from './colors/light';
@@ -31,7 +32,7 @@ interface ThemeProviderProps {
 }
 
 const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const themeColor = ZustandPersist.getState()?.ThemeApp;
+  const themeColor = ZustandPersist(useShallow(state => state?.ThemeApp));
 
   const changeTheme = useCallback((value?: ModeTheme) => {
     const nextValue = value ?? ModeTheme.Dark

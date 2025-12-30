@@ -2,6 +2,7 @@ import { LANGUAGES } from 'constants/enum';
 import i18n from 'i18next';
 import { getI18n, initReactI18next } from 'react-i18next';
 import ZustandPersist from 'zustand/persist';
+import { useShallow } from 'zustand/react/shallow';
 import { iLocalization } from './iLocalization';
 import en from './resources/en';
 import vi from './resources/vi';
@@ -62,7 +63,8 @@ export const changeLanguage = (language?: LANGUAGES): Promise<string> => {
     // Check if i18n is initialized
     if (!i18n.isInitialized) {
       // Initialize i18n first if not initialized
-      const savedLanguage = ZustandPersist.getState()?.Localization;
+      const savedLanguage = ZustandPersist(useShallow(state => state?.Localization));
+      
       configureLocalization(savedLanguage || language).then(() => {
         // After initialization, change language
         i18n.changeLanguage(renLanguage(language)).then((success: any) => {

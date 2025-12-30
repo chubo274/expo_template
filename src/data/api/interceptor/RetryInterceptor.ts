@@ -2,11 +2,11 @@ import { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { ResponseModel } from '../common'
 import Interceptor from './Interceptor'
 
-type RefreshTokenCallback = (token: string, refreshToken?: string) => void
+// type RefreshTokenCallback = (token: string, refreshToken?: string) => void
 
 // let isRefreshing = false
 // const isForceLogout = false
-let refreshSubscribers: RefreshTokenCallback[] = []
+// let refreshSubscribers: RefreshTokenCallback[] = []
 
 export class RetryInterceptor extends Interceptor {
   axiosInstance: AxiosInstance
@@ -79,11 +79,11 @@ export class RetryInterceptor extends Interceptor {
   };
 }
 
-const subscribeTokenRefresh = (cb: RefreshTokenCallback) => {
-  refreshSubscribers.push(cb)
-}
+// const subscribeTokenRefresh = (cb: RefreshTokenCallback) => {
+//   refreshSubscribers.push(cb)
+// }
 
-const onRefreshed = (token: string, refreshToken?: string) => {
-  refreshSubscribers.map(cb => cb(token, refreshToken))
-  refreshSubscribers = []
-}
+// const onRefreshed = (token: string, refreshToken?: string) => {
+//   refreshSubscribers.map(cb => cb(token, refreshToken))
+//   refreshSubscribers = []
+// }
