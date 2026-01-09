@@ -2,53 +2,49 @@ import { BottomTabHeaderProps, BottomTabNavigationOptions } from '@react-navigat
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { AppText } from 'components/text/AppText';
 import { ExtendedStackNavigationOptions } from 'expo-router/build/layouts/StackClient';
-import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { ITheme, useAppTheme } from 'theme/index';
 import { BackButton } from './BackButton';
 
-const CustomHeaderComponent = (props: NativeStackHeaderProps | BottomTabHeaderProps) => {
-  const theme = useAppTheme();
-  const styles = useMemo(() => createStyles(theme), [theme]);
-  const insets = useSafeAreaInsets();
-  const nameScreen = props?.options?.title;
+const CustomHeaderComponent = ({ props, theme }: { props: NativeStackHeaderProps | BottomTabHeaderProps, theme: ITheme }) => {
+  const nameScreen = props?.options?.title || '';
   const headerLeft = props?.options?.headerLeft;
   const headerRight = props?.options?.headerRight;
 
-  if (!nameScreen) return null;
-  return <View style={[styles.container, { height: theme.dimensions.getHeightHeader, paddingTop: insets.top }]}>
+  return <View style={[styles.container, { backgroundColor: theme.color.bg.white, height: theme.dimensions.getHeightHeader, paddingTop: initialWindowMetrics?.insets?.top || 0 }]}>
     {headerLeft ? headerLeft({ canGoBack: true }) : <BackButton />}
     <View style={styles.viewTitle}>
-      <AppText style={styles.textTitle}>{nameScreen}</AppText>
+      <AppText style={[styles.textTitle, { color: theme.color.primary[500] }]}>{nameScreen}</AppText>
     </View>
     {headerRight ? headerRight({ canGoBack: true }) : <View style={{ width: headerLeft ? 0 : 24 }} />}
   </View>
 }
 
 export const CustomHeader = (): ExtendedStackNavigationOptions => {
+  const theme = useAppTheme();
   const headerOption: ExtendedStackNavigationOptions = {
-    header: CustomHeaderComponent,
+    header: (props: NativeStackHeaderProps) => <CustomHeaderComponent props={props} theme={theme} />,
     presentation: 'card',
   };
 
   return headerOption
 }
 
-export const CustomBottomTabHeader = (): BottomTabNavigationOptions => {
+export const CustomBottomTabHeader = (theme: ITheme): BottomTabNavigationOptions => {
   const headerOption: BottomTabNavigationOptions = {
-    header: CustomHeaderComponent,
+    header: (props: BottomTabHeaderProps) => <CustomHeaderComponent props={props} theme={theme} />,
   };
 
   return headerOption
 }
 
-const createStyles = (theme: ITheme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: theme.dimensions.p16,
+    paddingHorizontal: 16,
   },
   viewTitle: {
     flex: 1,
@@ -56,7 +52,6 @@ const createStyles = (theme: ITheme) => StyleSheet.create({
     justifyContent: 'center',
   },
   textTitle: {
-    fontSize: theme.fontSize.p20,
-    fontWeight: 'bold',
+    fontSize: 20,
   },
 });
