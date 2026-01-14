@@ -76,16 +76,16 @@ export const TooltipMesure = React.memo((props: ITooltipMesureProps) => {
                   setIsOpen(false);
                 }}
               />
-            <Animated.View
-              style={[
-                { position: 'absolute' },
-                tooltipStyle,
-                animatedTooltipStyle,
-              ]}
-              pointerEvents="box-none"
-            >
-              {tooltipContent}
-            </Animated.View>
+              <Animated.View
+                style={[
+                  { position: 'absolute' },
+                  tooltipStyle,
+                  animatedTooltipStyle,
+                ]}
+                pointerEvents="box-none"
+              >
+                {tooltipContent}
+              </Animated.View>
             </View>
           </>
         )}
@@ -113,7 +113,7 @@ const TriangularView = React.memo((props: ITriangularViewProps) => {
       case 'right':
         return { ...styles.triangularViewLeft, borderRightColor: triangularColor };
     }
-  }, [side]);
+  }, [side, triangularColor]);
 
   const absoluteStyle = useMemo(() => {
     switch (side) {
@@ -126,19 +126,19 @@ const TriangularView = React.memo((props: ITriangularViewProps) => {
       case 'right':
         return { top: 2, left: pos.w };
     }
-  }, [side]);
+  }, [side, pos]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
   }));
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
-        { zIndex: 999, position: 'absolute' }, 
-        absoluteStyle, 
+        { zIndex: 999, position: 'absolute' },
+        absoluteStyle,
         animatedStyle
-      ]} 
+      ]}
       pointerEvents="box-none"
     >
       <View style={triangularViewStyle} />

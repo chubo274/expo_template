@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from "react";
 import { Modal, Pressable, TouchableOpacity, View } from "react-native";
-import { useTheme } from "theme/index";
+import { useAppTheme } from "theme/index";
 import { IAppTooltipProps } from ".";
 import { styles } from "./tooltip.styles";
 
@@ -12,7 +12,7 @@ export const TooltipModal = React.memo((props: ITooltipModalProps) => {
   const ref = useRef<View>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0, w: 0, h: 0 });
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const measure = () => {
     ref.current?.measureInWindow((x, y, w, h) => {
@@ -45,7 +45,7 @@ export const TooltipModal = React.memo((props: ITooltipModalProps) => {
         {/* ===== Tooltip overlay ===== */}
         <Modal visible={isOpen} transparent={true} animationType="fade">
           <TouchableOpacity
-            style={{ flex: 1, backgroundColor: `${theme.color.cardBackground}80` }}
+            style={{ flex: 1, backgroundColor: `${theme.color.bg.white}80` }}
             activeOpacity={1}
             onPress={() => {
               setIsOpen(false);
@@ -80,7 +80,7 @@ const TriangularView = React.memo((props: ITriangularViewProps) => {
       case 'right':
         return { ...styles.triangularViewLeft, borderRightColor: triangularColor };
     }
-  }, [side]);
+  }, [side, triangularColor]);
 
   const absoluteStyle = useMemo(() => {
     switch (side) {
@@ -93,7 +93,7 @@ const TriangularView = React.memo((props: ITriangularViewProps) => {
       case 'right':
         return { top: pos.y + 2, left: pos.x + pos.w };
     }
-  }, [side]);
+  }, [side, pos]);
 
   return <View style={[{ zIndex: 999, position: 'absolute' }, absoluteStyle]} pointerEvents="box-none">
     <View style={triangularViewStyle} />

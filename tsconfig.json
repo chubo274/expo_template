@@ -8,11 +8,11 @@
       "components/*": ["src/components/*"],
       "assets/*": ["src/assets/*"],
       "constants/*": ["src/constants/*"],
-      "hooks/*": ["src/hooks/*"],
       "utils/*": ["src/utils/*"],
       "theme/*": ["src/theme/*"],
       "zustand/*": ["src/zustand/*"],
       "localization/*": ["src/localization/*"],
+      "api/*": ["src/api/*"],
     }
   },
   "include": [

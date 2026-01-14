@@ -1,58 +1,69 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { isObject } from 'utils/functions/isObject';
+import { LANGUAGES, ModeTheme } from 'constants/enum';
 import { create } from 'zustand';
-import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import { ZustandPersistModel } from './IZustandPersistModel';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
-// Config store interface
-interface IRootState extends ZustandPersistModel {
-  save<K extends keyof ZustandPersistModel, V extends ZustandPersistModel[K]>(key: K, value: V, mode?: 'update'): void;
-  hydrated: boolean | undefined;
-  changeHydrated(zustandReady: boolean): void;
+// Define the store state type
+export interface PersistState {
+  // Theme
+  ThemeApp?: ModeTheme;
+  // Localization
+  Localization?: LANGUAGES;
+  // Auth
+  accessToken?: string;
+  refreshToken?: string;
+  // User
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+  };
+
+  // Actions
+  save: <K extends keyof PersistState>(key: K, value: PersistState[K]) => void;
+  setTokens: (accessToken: string, refreshToken: string) => void;
+  setUser: (user: PersistState['user']) => void;
+  logout: () => void;
+  reset: () => void;
 }
 
-const ZustandPersist = create<IRootState>()(devtools(persist(
-  (set, get) => ({
-    hydrated: undefined,
-    save: (key, value, mode) => {
-      const prevState = get()?.[key];
-      if (mode && Boolean(prevState) && isObject(value)) {
-        if (!(isObject(prevState))) throw new Error(`typeof ${key} maybe not is object`);
-        return set({ [key]: { ...prevState as object, ...value as object } });
-      }
+// Create the store with persist middleware
+const ZustandPersist = create<PersistState>()(
+  persist(
+    (set) => ({
+      // Generic save function for any key
+      save: (key, value) => set({ [key]: value }),
 
-      return set({ [key]: value });
-    },
-    changeHydrated: (nextState: boolean) => set({ hydrated: nextState })
-  }),
-  {
-    name: 'Zustand-Persist',
-    storage: createJSONStorage(() => AsyncStorage),
+      // Set auth tokens
+      setTokens: (accessToken, refreshToken) =>
+        set({ accessToken, refreshToken }),
 
-    onRehydrateStorage: () => (state) => {
-      console.info('🚀 Rehydration started', state);
-      state?.changeHydrated(true);
-    },
-  }))
+      // Set user data
+      setUser: (user) => set({ user }),
+
+      // Logout - clear auth data
+      logout: () => set({
+        accessToken: undefined,
+        refreshToken: undefined,
+        user: undefined,
+      }),
+
+      // Reset all state
+      reset: () => set({}),
+    }),
+    {
+      name: 'app-storage',
+      storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({
+        // Only persist these fields
+        ThemeApp: state.ThemeApp,
+        Localization: state.Localization,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+        user: state.user,
+      }),
+    }
+  )
 );
 
 export default ZustandPersist;
-
-/**
- * Helper to select multiple fields from persist store with shallow comparison
- * @param keys - Array of keys to select from store
- * @returns Object with selected fields
- */
-// export const useSelectorPersist = <K extends keyof ZustandPersistModel>(
-//   ...keys: K[]
-// ): Pick<ZustandPersistModel, K> => {
-//   return ZustandPersist(
-//     useShallow((state: IRootState) => {
-//       const result = {} as Pick<ZustandPersistModel, K>;
-//       keys.forEach(key => {
-//         result[key] = state[key];
-//       });
-//       return result;
-//     })
-//   );
-// };

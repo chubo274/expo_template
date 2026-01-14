@@ -1,3 +1,5 @@
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from 'api/axios/common';
 import { CustomHeader } from 'components/navigation/CustomHeader';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -16,20 +18,22 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider>
-        <Stack initialRouteName="index">
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="OnBoardingScreen" options={{ headerShown: false }} />
-          <Stack.Screen name="SigninStack" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="DetailToDoScreen"
-            options={{ ...customHeaderOptions, headerTitle: 'Detail To Do' }}
-          />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <QueryClientProvider client={queryClient}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider>
+          <Stack initialRouteName="index">
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="OnBoardingScreen" options={{ headerShown: false }} />
+            <Stack.Screen name="SigninStack" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="DetailToDoScreen"
+              options={{ ...customHeaderOptions, headerTitle: 'Detail To Do' }}
+            />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </QueryClientProvider>
   );
 }
