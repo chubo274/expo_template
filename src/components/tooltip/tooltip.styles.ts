@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   triangularViewTop: {
@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 10, // height: 10
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderBottomColor: 'red',
+    borderBottomColor: 'white',
   },
   triangularViewBottom: {
     width: 0,
@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     borderTopWidth: 10, // height: 10
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: 'red',
+    borderTopColor: 'white',
   },
   triangularViewLeft: {
     width: 0,
@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
     borderLeftColor: 'transparent',
-    borderRightColor: 'red',
+    borderRightColor: 'white',
   },
   triangularViewRight: {
     width: 0,
@@ -41,6 +41,6 @@ export const styles = StyleSheet.create({
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
     borderRightColor: 'transparent',
-    borderLeftColor: 'red',
+    borderLeftColor: 'white',
   },
 });

@@ -1,26 +1,58 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
-import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { IAppTooltipProps } from ".";
-import { styles } from "./tooltip.styles";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
+import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { IAppTooltipProps } from '.';
+import { styles } from './tooltip.styles';
 
 interface ITooltipMesureProps extends Omit<IAppTooltipProps, 'type'> {
 }
 
 const ANIMATION_DURATION = 300;
 export const TooltipMesure = React.memo((props: ITooltipMesureProps) => {
-  const { children, tooltipContent, side, triangularColor } = props;
+  const { children, tooltipContent, side, triangularColor, contentSide = 'center' } = props;
   const ref = useRef<View>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
-  const [pos, setPos] = useState({ x: 0, y: 0, w: 0, h: 0 });
+  const [pos, setPos] = useState({ w: 0, h: 0 });
+  const [posContent, setPosContent] = useState({ width: 0, height: 0 });
   const opacity = useSharedValue(0);
 
   const measure = () => {
     ref.current?.measureInWindow((x, y, w, h) => {
-      setPos({ x, y, w, h });
+      setPos({ w, h });
     });
   };
+
+  const onLayoutContent = useCallback((e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    setPosContent({ width, height });
+  }, []);
+
+  const tooltipStyle = useMemo(() => {
+    let style;
+    let coefficient = 0
+    if (contentSide === 'left') {
+      coefficient = 1
+    } else if (contentSide === 'right') {
+      coefficient = -1
+    }
+    const contentSideLeft = (posContent.width / 2 - 20) * coefficient
+    const contentSideTop = (posContent.height / 2 - 20) * coefficient
+    switch (side) {
+      case 'top':
+        style = { top: -posContent.height - pos.h + 13, left: -posContent.width / 2 + pos.w / 2 };
+        return { top: style.top, left: style.left + contentSideLeft };
+      case 'bottom':
+        style = { top: pos.h + 9, left: -posContent.width / 2 + pos.w / 2 };
+        return { top: style.top, left: style.left + contentSideLeft };
+      case 'left':
+        style = { top: -posContent.height / 2 + pos.h / 2, left: - posContent.width - 9 };
+        return { top: style.top + contentSideTop, left: style.left };
+      case 'right':
+        style = { top: -posContent.height / 2 + pos.h / 2, left: posContent.width - 8 };
+        return { top: style.top + contentSideTop, left: style.left };
+    }
+  }, [pos, side, posContent, contentSide]);
 
   useEffect(() => {
     if (isOpen) {
@@ -35,19 +67,6 @@ export const TooltipMesure = React.memo((props: ITooltipMesureProps) => {
       }, ANIMATION_DURATION);
     }
   }, [isOpen, opacity, shouldRender]);
-
-  const tooltipStyle = useMemo(() => {
-    switch (side) {
-      case 'top':
-        return { top: -(pos.h + 10) - 1, left: 0 };
-      case 'bottom':
-        return { top: (pos.h + 10) - 1, left: 0 };
-      case 'left':
-        return { top: 0, left: -(pos.w + 10) };
-      case 'right':
-        return { top: 0, left: pos.w + 10 };
-    }
-  }, [pos, side]);
 
   const animatedTooltipStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -83,6 +102,7 @@ export const TooltipMesure = React.memo((props: ITooltipMesureProps) => {
                   animatedTooltipStyle,
                 ]}
                 pointerEvents="box-none"
+                onLayout={onLayoutContent}
               >
                 {tooltipContent}
               </Animated.View>
@@ -95,7 +115,7 @@ export const TooltipMesure = React.memo((props: ITooltipMesureProps) => {
 })
 
 interface ITriangularViewProps extends Pick<IAppTooltipProps, 'side' | 'triangularColor'> {
-  pos: { x: number; y: number; w: number; h: number };
+  pos: { w: number; h: number };
   opacity: SharedValue<number>;
 }
 
@@ -126,7 +146,7 @@ const TriangularView = React.memo((props: ITriangularViewProps) => {
       case 'right':
         return { top: 2, left: pos.w };
     }
-  }, [side, pos]);
+  }, [side]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
