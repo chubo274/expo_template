@@ -4,10 +4,11 @@ import { AppText } from 'components/text/AppText';
 import { ExtendedStackNavigationOptions } from 'expo-router/build/layouts/StackClient';
 import { StyleSheet, View } from 'react-native';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
-import { ITheme, useAppTheme } from 'theme/index';
+import { useAppTheme } from 'theme/index';
 import { BackButton } from './BackButton';
 
-const CustomHeaderComponent = ({ props, theme }: { props: NativeStackHeaderProps | BottomTabHeaderProps, theme: ITheme }) => {
+const CustomHeaderComponent = ({ props }: { props: NativeStackHeaderProps | BottomTabHeaderProps }) => {
+  const theme = useAppTheme();
   const nameScreen = props?.options?.title || '';
   const headerLeft = props?.options?.headerLeft;
   const headerRight = props?.options?.headerRight;
@@ -21,19 +22,18 @@ const CustomHeaderComponent = ({ props, theme }: { props: NativeStackHeaderProps
   </View>
 }
 
-export const CustomHeader = (): ExtendedStackNavigationOptions => {
-  const theme = useAppTheme();
+export const useCustomHeader = (): ExtendedStackNavigationOptions => {
   const headerOption: ExtendedStackNavigationOptions = {
-    header: (props: NativeStackHeaderProps) => <CustomHeaderComponent props={props} theme={theme} />,
+    header: (props: NativeStackHeaderProps) => <CustomHeaderComponent props={props} />,
     presentation: 'card',
   };
 
   return headerOption
 }
 
-export const CustomBottomTabHeader = (theme: ITheme): BottomTabNavigationOptions => {
+export const useCustomBottomTabHeader = (): BottomTabNavigationOptions => {
   const headerOption: BottomTabNavigationOptions = {
-    header: (props: BottomTabHeaderProps) => <CustomHeaderComponent props={props} theme={theme} />,
+    header: (props: BottomTabHeaderProps) => <CustomHeaderComponent props={props} />,
   };
 
   return headerOption
