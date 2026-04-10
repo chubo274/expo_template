@@ -1,6 +1,6 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from 'api/axios/common';
-import { CustomHeader } from 'components/navigation/CustomHeader';
+import { useCustomHeader } from 'components/navigation/CustomHeader';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { configureLocalization, fallBackLanguage } from 'localization/index';
@@ -10,7 +10,7 @@ import ThemeProvider from 'theme/index';
 import ZustandPersist from 'zustand/persist';
 
 export default function RootLayout() {
-  const customHeaderOptions = CustomHeader();
+  const customHeaderOptions = useCustomHeader();
 
   useEffect(() => {
     const savedLanguage = ZustandPersist.getState()?.Localization || fallBackLanguage;
