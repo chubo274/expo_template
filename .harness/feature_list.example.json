@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "comment": "Copy to .harness/feature_list.json (gitignored) and edit. This is the ground-truth list of product features/intents the agent is allowed to work on. Used as a scope guardrail.",
+  "version": 1,
+  "features": [
+    {
+      "id": "FEAT-0001",
+      "name": "Example feature",
+      "status": "planned",
+      "owner": "@your-handle",
+      "description": "One-sentence summary of what this feature does and the user value it delivers.",
+      "linked_tasks": []
+    }
+  ]
+}

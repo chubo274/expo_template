@@ -1,0 +1,16 @@
+{
+  "//": "Copy the relevant fields below into your repo's .claude/settings.json (create the file if missing) to wire the Outer Harness Stop hook. The hook runs once when a Claude Code session ends and appends a row to .harness/logs/runs.jsonl.",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .harness/hooks/on-stop.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

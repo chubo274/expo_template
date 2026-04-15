@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/.harness/logs/schema.json",
+  "title": "Outer Harness run record",
+  "description": "One JSON object per line in runs.jsonl. Append-only. Each row records a single agent run (or a meaningful sub-event such as task_created).",
+  "type": "object",
+  "required": ["timestamp", "task_id", "agent", "model", "outcome"],
+  "additionalProperties": true,
+  "properties": {
+    "timestamp": {
+      "description": "ISO-8601 UTC timestamp, e.g. 2026-04-15T13:54:00Z",
+      "type": "string",
+      "format": "date-time"
+    },
+    "task_id": {
+      "description": "Matches a directory name under .harness/tasks/. Use 'unscoped' if no task is active.",
+      "type": "string",
+      "minLength": 1
+    },
+    "agent": {
+      "description": "Identifier for the agent harness, e.g. claude-code, codex-cli, cursor",
+      "type": "string",
+      "minLength": 1
+    },
+    "model": {
+      "description": "Model id used for the run, e.g. claude-opus-4-6",
+      "type": "string",
+      "minLength": 1
+    },
+    "outcome": {
+      "description": "Coarse outcome of the run.",
+      "type": "string",
+      "enum": ["task_created", "succeeded", "failed", "partial", "abandoned", "stopped"]
+    },
+    "input_tokens": {
+      "description": "Total input tokens consumed in the run. 0 if unknown.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "output_tokens": {
+      "description": "Total output tokens generated in the run. 0 if unknown.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "cost_usd": {
+      "description": "Estimated USD cost. 0 if unknown.",
+      "type": "number",
+      "minimum": 0
+    },
+    "session_id": {
+      "description": "Free-form session identifier so multiple rows from the same session can be grouped.",
+      "type": "string"
+    },
+    "duration_seconds": {
+      "description": "Wall-clock duration of the run in seconds. Optional.",
+      "type": "number",
+      "minimum": 0
+    },
+    "notes": {
+      "description": "Optional free-form notes; useful for task_created rows or describing failures.",
+      "type": "string"
+    }
+  }
+}
