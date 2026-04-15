@@ -73,7 +73,7 @@ class ApiGateway {
 
   execute = (config: IConfigRequest) => {
     const { method, resource, body, isFormDataType, params, queryParams, timeout, baseURL, isFormDataAddress } = config
-    const Token = ZustandPersist?.getState()?.Token;
+    const accessToken = ZustandPersist?.getState()?.accessToken;
     const Localization = ZustandPersist?.getState()?.Localization;
 
     let data = body
@@ -88,7 +88,7 @@ class ApiGateway {
     // @ts-ignore
     headers['device-id'] = '1234567890'
     // @ts-ignore
-    if (Token?.token) headers['token'] = Token?.token
+    if (accessToken) headers['token'] = accessToken
     const urlQueryParams = resource + `?${qs.stringify(queryParams, { skipNulls: true })}`
 
     const configRequest: AxiosRequestConfig<any> = {

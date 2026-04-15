@@ -1,10 +1,10 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { API_CONFIG } from './config';
+import { baseUrl } from './config';
 
 // Create axios instance with default config
 const axiosClient = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
-  timeout: API_CONFIG.TIMEOUT,
+  baseURL: baseUrl.value,
+  timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
   },

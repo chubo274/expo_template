@@ -146,7 +146,7 @@ const TriangularView = React.memo((props: ITriangularViewProps) => {
       case 'right':
         return { top: 2, left: pos.w };
     }
-  }, [side]);
+  }, [side, pos.h, pos.w]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,

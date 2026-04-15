@@ -1,4 +1,4 @@
-import ZustandSession from '@zustand/session';
+import ZustandSession from 'zustand/session';
 import React, { useState } from 'react';
 import {
   Dimensions,

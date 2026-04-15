@@ -1,5 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from 'api/axios/common';
+import { queryClient } from 'api/axios/queryClient';
 import { useCustomHeader } from 'components/navigation/CustomHeader';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
