@@ -33,7 +33,10 @@ export const useCustomHeader = (): ExtendedStackNavigationOptions => {
 
 export const useCustomBottomTabHeader = (): BottomTabNavigationOptions => {
   const headerOption: BottomTabNavigationOptions = {
-    header: (props: BottomTabHeaderProps) => <CustomHeaderComponent props={props} />,
+    header: (props: BottomTabHeaderProps) => {
+      const propsCustom = { ...props, options: { ...props.options, headerLeft: () => <View /> } }
+      return <CustomHeaderComponent props={propsCustom} />
+    },
   };
 
   return headerOption
