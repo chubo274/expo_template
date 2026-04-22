@@ -1,4 +1,4 @@
-import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import ZustandPersist from 'zustand/persist';
 import { handleApiError } from './common';
 
@@ -15,24 +15,34 @@ export const setupRequestInterceptor = () => {
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    if (config.data instanceof FormData) {
+      config.headers.delete('Content-Type');
+    }
+
+    console.info(`→ [API] ${config.method?.toUpperCase()} `, config);
+
     return config;
+  };
+};
+
+export const setupResponseSuccessInterceptor = () => {
+  return (response: AxiosResponse) => {
+    console.info(`Raw response:`, response);
+    return response;
   };
 };
 
 export const setupResponseInterceptor = () => {
   return async (error: AxiosError) => {
-    const apiError = handleApiError(error);
-
-    // Handle 401 - Unauthorized (token expired)
-    if (apiError.statusCode === 401) {
-      // Clear token
-      ZustandPersist.getState().logout();
-      // You can add navigation logic here if needed
+    if (error) {
+      console.error(`Raw error:`, error);
     }
 
-    // Handle 403 - Forbidden
-    if (apiError.statusCode === 403) {
-      // Handle forbidden access
+    const apiError = handleApiError(error);
+
+    if (apiError.statusCode === 401) {
+      ZustandPersist.getState().logout();
     }
 
     return Promise.reject(apiError);
