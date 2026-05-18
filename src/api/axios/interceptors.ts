@@ -1,4 +1,4 @@
-import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import ZustandPersist from 'zustand/persist';
 import { handleApiError } from './common';
 
@@ -8,6 +8,11 @@ export const requestInterceptorSuccess = (config: InternalAxiosRequestConfig) =>
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+};
+
+export const responseInterceptorSuccess = (response: AxiosResponse) => {
+  console.info('[API Response]: ', response);
+  return response;
 };
 
 export const responseInterceptorError = (error: AxiosError) => {
