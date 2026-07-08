@@ -1,12 +1,109 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "HARNESS_ROOT": "/Users/chubo/Work/DatXe",
+    "HARNESS_DOCS": "/Users/chubo/Work/DatXe/docs/harness"
+  },
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false
+  },
+  "permissions": {
+    "allow": [
+      "Bash(bun run lint*)",
+      "Bash(bun run test*)",
+      "Bash(bun run build*)",
+      "Bash(bun run typecheck*)",
+
+      "Bash(bun lint*)",
+      "Bash(bun test*)",
+      "Bash(bun build*)",
+      "Bash(bun typecheck*)",
+
+      "Bash(bun run prisma:generate*)",
+      "Bash(bun run prisma:validate*)",
+      "Bash(bun run prisma:migrate*)",
+
+      "Bash(./scripts/harness/create-task.sh*)",
+      "Bash(./scripts/harness/run-checks.sh*)",
+      "Bash(./scripts/harness/validate-contract.sh*)",
+      "Bash(./scripts/harness/update-task-index.sh*)",
+      "Bash(./scripts/harness/summarize-project-state.sh*)",
+
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(grep *)",
+      "Bash(pwd)",
+      "Bash(cd *)",
+
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+
+      "Bash(rm -f ./*)",
+      "Bash(rm -f ./**)",
+      "Bash(rm -rf ./*)",
+      "Bash(rm -rf ./**)",
+      "Bash(rmdir ./*)",
+      "Bash(rmdir ./**)"
+    ],
+    "deny": [
+      "Bash(git push*)",
+      "Bash(git reset*)",
+      "Bash(git clean*)",
+
+      "Bash(rm -f /*)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf /)",
+      "Bash(rm -f /)",
+      "Bash(rm -f ~*)",
+      "Bash(rm -rf ~*)",
+      "Bash(rm -f ../*)",
+      "Bash(rm -rf ../*)",
+      "Bash(rm -f ../**)",
+      "Bash(rm -rf ../**)",
+      "Bash(rm -f /Users*)",
+      "Bash(rm -rf /Users*)",
+      "Bash(rm -f /etc*)",
+      "Bash(rm -rf /etc*)",
+      "Bash(rm -f /System*)",
+      "Bash(rm -rf /System*)",
+      "Bash(rm -f /Applications*)",
+      "Bash(rm -rf /Applications*)",
+      "Bash(rm -f /Library*)",
+      "Bash(rm -rf /Library*)",
+      "Bash(rmdir /*)",
+      "Bash(rmdir /)",
+      "Bash(rmdir ~*)",
+      "Bash(rmdir ../*)",
+      "Bash(rmdir ../**)",
+
+      "Bash(find /* -delete*)",
+      "Bash(find ~* -delete*)",
+      "Bash(find ../* -delete*)",
+      "Bash(find ../** -delete*)",
+      "Bash(find * -exec rm*)",
+
+      "Bash(mv *src/*src/*)",
+      "Bash(git *--force*)",
+      "Bash(git * -f *)"
+    ]
+  },
   "hooks": {
-    "Stop": [
+    "SessionStart": [
       {
-        "matcher": "*",
+        "matcher": "startup",
         "hooks": [
           {
             "type": "command",
-            "command": "bash .harness/hooks/on-stop.sh"
+            "command": "echo '🔧 DatXe Multi-Project Harness initialized. Use /harness <task> to start.'"
           }
         ]
       }
