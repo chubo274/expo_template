@@ -1,6 +1,6 @@
 import { AppText } from 'components/text/AppText';
 import React, { ReactNode, useMemo } from 'react';
-import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { ITheme, useAppTheme } from 'theme/index';
 
 interface IAppButton extends TouchableOpacityProps {
@@ -8,36 +8,42 @@ interface IAppButton extends TouchableOpacityProps {
   rightIcon?: ReactNode;
   text: string;
   disabled?: boolean;
+  loading?: boolean;
   textStyle?: any;
 }
 
 export const AppButton = React.memo((props: IAppButton) => {
-  const { leftIcon, rightIcon, text, onPress, disabled = false, style, textStyle, ...rest } = props;
+  const { leftIcon, rightIcon, text, onPress, disabled = false, loading = false, style, textStyle, ...rest } = props;
   const theme = useAppTheme();
-  const styles = useMemo(() => createStyles(theme, disabled), [theme, disabled]);
+  const isDisabled = disabled || loading;
+  const styles = useMemo(() => stylesSheet(theme, isDisabled), [theme, isDisabled]);
 
   return (
     <TouchableOpacity
       {...rest}
       style={[styles.button, style]}
       onPress={onPress}
-      disabled={disabled}
+      disabled={isDisabled}
       activeOpacity={0.8}
     >
       <View style={styles.container}>
-        {leftIcon || <View />}
+        {!loading && (leftIcon || <View />)}
         <View style={styles.textContainer}>
-          <AppText style={[styles.text, textStyle]}>{text}</AppText>
+          {loading ? (
+            <ActivityIndicator color={theme.color.button.primaryText} />
+          ) : (
+            <AppText style={[styles.text, textStyle]}>{text}</AppText>
+          )}
         </View>
-        {rightIcon || <View />}
+        {!loading && (rightIcon || <View />)}
       </View>
     </TouchableOpacity>
   );
 });
 
-const createStyles = (theme: ITheme, disabled: boolean) => StyleSheet.create({
+const stylesSheet = (theme: ITheme, disabled: boolean) => StyleSheet.create({
   button: {
-    backgroundColor: disabled ? theme.color.neutral[300] : theme.color.primary[500],
+    backgroundColor: disabled ? theme.color.button.disabledBg : theme.color.button.primaryBg,
     borderRadius: theme.dimensions.p12,
     paddingVertical: theme.dimensions.p16,
     paddingHorizontal: theme.dimensions.p16,
@@ -50,14 +56,13 @@ const createStyles = (theme: ITheme, disabled: boolean) => StyleSheet.create({
     justifyContent: 'space-between',
   },
   textContainer: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
     fontSize: theme.fontSize.p16,
     fontWeight: '600',
-    color: disabled ? theme.color.neutral[500] : theme.color.white,
+    color: disabled ? theme.color.button.disabledText : theme.color.button.primaryText,
     textAlign: 'center',
   },
 });
