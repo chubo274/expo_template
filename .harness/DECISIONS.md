@@ -51,42 +51,16 @@
 | **Impacted Projects** | app_user, app_taixe (T-0040 tái dùng), nestjs_prisma (T-0006 implement endpoints) |
 | **Consequences** | <ul><li>`authService` dùng requestOtp/verifyOtp; hooks `useRequestOtp`/`useVerifyOtp`</li><li>`user` shape: phone required, name/email optional</li><li>Mock `__DEV__` code `000000` auto-pass — gỡ khi backend live</li><li>Kiến trúc service tách biệt để sau wire nhà mạng (SMS) hoặc Zalo OTP</li><li>Backend T-0006 phải cung cấp `/auth/otp/request` + `/auth/otp/verify`</li></ul> |
 
-### D-0006: Mobile Maps — react-native-maps + PROVIDER_GOOGLE
+### D-0009: nestjs_prisma — Import Enum/Type từ @prisma/client
 
 | Field | Value |
 |-------|-------|
 | **Status** | Accepted |
-| **Source Task** | T-0034 (2026-06-29) |
-| **Context** | App gọi xe cần Google Maps thật (Maps/Places/Routes nhất quán) trên cả 2 nền tảng. `expo-maps` chỉ hỗ trợ Google trên Android (iOS rơi về Apple Maps) → không hợp yêu cầu. |
-| **Decision** | Dùng **react-native-maps** với `PROVIDER_GOOGLE` trên **cả iOS và Android**. API key (Android + iOS) inject qua **env** trong `app.config.ts` (`ios.config.googleMapsApiKey`, `android.config.googleMaps.apiKey`). |
-| **Impacted Projects** | app_user (app_taixe sẽ tái dùng pattern ở các task map của tài xế) |
-| **Consequences** | <ul><li>**Rời Expo Go** — bắt buộc development build / `expo prebuild` (native module đầu tiên của project)</li><li>`react-native-maps@1.20.1` KHÔNG có config plugin → không thêm vào `plugins`; prebuild đọc key trực tiếp từ config</li><li>Keys build-time, không prefix `EXPO_PUBLIC_`, không commit (chỉ `.env.example` placeholder)</li><li>EAS build cần set 2 key làm secrets/env</li><li>Components `AppMap`/`SearchPanel`/`useCurrentLocation` tái dùng cho booking/trip + app_taixe</li><li>Place search (Places autocomplete/geocode qua backend `/routes/*`) để T-0035</li></ul> |
-
----
-
-### D-0007: Backend Routing Provider — Goong API (replaces Google Maps)
-
-| Field | Value |
-|-------|-------|
-| **Status** | Accepted |
-| **Source Task** | T-0050 (2026-07-01) |
-| **Context** | App gọi xe tại VN cần routing/places/geocoding chính xác cho địa chỉ Việt Nam và chi phí hợp lý. Goong là nhà cung cấp bản đồ nội địa VN (tiles + routing + places), thay cho Google Maps. Backend T-0031 đã dựng `GoogleMapsService`; nay swap provider mà không đổi API contract. |
-| **Decision** | Backend `/routes/*` dùng **`GoongService`** (base `https://rsapi.goong.io`) thay `GoogleMapsService`. `GoongService` là **adapter**: gọi Goong rồi normalize response về đúng shape Google-compatible mà `RoutesService.transform*()` đang đọc → `RoutesController` + tất cả DTO **không đổi**. Env: `GOONG_API_KEY` + `GOONG_BASE_URL`. |
-| **Impacted Projects** | nestjs_prisma (T-0050); app_user (T-0053 Places autocomplete, T-0054 route display); T-0056 (cleanup Google Maps) |
-| **Consequences** | <ul><li>Mode mapping: `driving→car`, `walking→bike`; **`transit` bị reject** (Goong không hỗ trợ) → `BadRequestException`</li><li>Cache key prefix đổi sang `goong:*` để không phục vụ entry Google-shaped cũ</li><li>Google Maps files (config/service) **còn nằm nguyên** — xóa ở T-0056</li><li>Frontend map stack (Mapbox tiles + Goong routing/places) — xem [[map-stack-mapbox-goong]]</li><li>Bổ sung D-0006: backend routing provider chuyển từ Google sang Goong; `PROVIDER_GOOGLE` phía mobile map SDK là vấn đề tách biệt (đang được thay bằng Mapbox ở T-0051+)</li></ul> |
-
----
-
-### D-0008: Mobile Map SDK — @rnmapbox/maps (replaces react-native-maps + PROVIDER_GOOGLE)
-
-| Field | Value |
-|-------|-------|
-| **Status** | Accepted |
-| **Source Task** | T-0051 (2026-07-01) |
-| **Context** | Sau khi backend chuyển routing/places sang Goong (D-0007), map tiles phía mobile cũng chuyển sang Mapbox để đồng bộ map stack (Mapbox tiles + Goong routing/places). Thay `react-native-maps`+`PROVIDER_GOOGLE` (D-0006) bằng `@rnmapbox/maps`. T-0051 chỉ setup SDK; migrate `AppMap` là T-0052. |
-| **Decision** | Mobile dùng **`@rnmapbox/maps@10.3.1`** (Mapbox GL Native). Two-token model: **`MAPBOX_DOWNLOAD_TOKEN`** (`sk.`, build-time, inject vào config plugin `RNMapboxMapsDownloadToken` qua `app.config.ts`, **KHÔNG** `EXPO_PUBLIC_`) + **`EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN`** (`pk.`, runtime, gọi `Mapbox.setAccessToken()` ở app entry). Camera model (`centerCoordinate: [lng, lat]`, `zoomLevel`) thay `Region` (lat/lng + delta). |
-| **Impacted Projects** | app_user (T-0051 setup, T-0052 migrate AppMap, T-0053/T-0054 search/route); app_taixe (T-0055 tái dùng pattern); T-0056 (gỡ react-native-maps) |
-| **Consequences** | <ul><li>Supersede D-0006 (mobile tile provider): react-native-maps + PROVIDER_GOOGLE → Mapbox. `react-native-maps` **còn cài song song** cho tới T-0056</li><li>Coordinate order đảo sang GeoJSON `[lng, lat]` — đồng nhất với Goong (xem [[map-stack-mapbox-goong]])</li><li>`app.config.ts` giờ inject cả Google Maps key (cũ) lẫn Mapbox download token — Google key gỡ ở T-0056</li><li>`@rnmapbox/maps@10.3.1` tương thích Expo 54 / RN 0.81 / New Arch (peer `react-native >=0.79`, `expo >=47`)</li><li>Vẫn cần dev build / `expo prebuild` (đã có từ D-0006)</li><li>`src/constants/map.ts` (Region-based) giữ nguyên tới T-0052; types Mapbox mới nằm ở `src/constants/mapbox.ts`</li></ul> |
+| **Source Task** | Convention (2026-07-09) |
+| **Context** | Prisma generate ra các enum (UserRole, UserStatus, BookingStatus, v.v.) trong `@prisma/client`. Hardcode string gây runtime lỗi khi enum value đổi tên và mất type safety. |
+| **Decision** | Tất cả code trong `nestjs_prisma` (service, seed, controller, test) **phải import enum và type từ `@prisma/client`**. Không dùng string literal cho enum value. |
+| **Impacted Projects** | nestjs_prisma |
+| **Consequences** | <ul><li>`import { UserRole, UserStatus, BookingStatus, ... } from '@prisma/client'`</li><li>Dùng `UserRole.ADMIN`, `BookingStatus.CONFIRMED`, v.v. — không hardcode `'ADMIN'`, `'CONFIRMED'`</li><li>Áp dụng cho seed, service, controller, guard, test</li><li>Prisma re-generate sau schema change → enum tự đồng bộ</li></ul> |
 
 ---
 
