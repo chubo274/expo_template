@@ -28,13 +28,14 @@ export const AppButton = React.memo((props: IAppButton) => {
     >
       <View style={styles.container}>
         {!loading && (leftIcon || <View />)}
-        <View style={styles.textContainer}>
-          {loading ? (
+        {loading ?
+          <View style={styles.viewLoading}>
             <ActivityIndicator color={theme.color.button.primaryText} />
-          ) : (
+          </View> :
+          <View style={styles.textContainer}>
             <AppText style={[styles.text, textStyle]}>{text}</AppText>
-          )}
-        </View>
+          </View>
+        }
         {!loading && (rightIcon || <View />)}
       </View>
     </TouchableOpacity>
@@ -65,5 +66,9 @@ const stylesSheet = (theme: ITheme, disabled: boolean) => StyleSheet.create({
     color: disabled ? theme.color.button.disabledText : theme.color.button.primaryText,
     textAlign: 'center',
   },
+  viewLoading: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
-

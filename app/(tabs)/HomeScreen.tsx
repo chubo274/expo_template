@@ -16,6 +16,5 @@ export default function HomeScreen() {
 const createStyles = (theme: ITheme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.color.bg.shuttle,
   },
 });

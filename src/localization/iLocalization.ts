@@ -4,4 +4,7 @@ export interface iLocalization {
   login: string;
   logout: string;
   signup: string;
+  tabHome: string;
+  tabExplore: string;
+  tabProfile: string;
 }

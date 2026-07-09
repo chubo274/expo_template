@@ -6,5 +6,8 @@ const en: iLocalization = {
   login: 'Login',
   logout: 'Logout',
   signup: 'Sign Up',
+  tabHome: 'Home',
+  tabExplore: 'Explore',
+  tabProfile: 'Profile',
 }
 export default en;
