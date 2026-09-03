@@ -97,7 +97,7 @@ export default function OnboardingScreen() {
 const createStyles = (theme: ITheme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.color.neutral[900],
+    backgroundColor: theme.color.background.app,
     paddingHorizontal: theme.dimensions.p20,
   },
   content: {
@@ -109,13 +109,13 @@ const createStyles = (theme: ITheme) => StyleSheet.create({
   title: {
     fontSize: theme.fontSize.p24,
     fontWeight: 'bold',
-    color: theme.color.textColor.white,
+    color: theme.color.text.primary,
     textAlign: 'center',
     marginBottom: theme.dimensions.p20,
   },
   description: {
     fontSize: theme.fontSize.p16,
-    color: theme.color.textColor.subText,
+    color: theme.color.text.primary,
     textAlign: 'center',
     lineHeight: theme.dimensions.p24,
   },
@@ -129,7 +129,7 @@ const createStyles = (theme: ITheme) => StyleSheet.create({
     width: theme.dimensions.p8,
     height: theme.dimensions.p8,
     borderRadius: theme.dimensions.p4,
-    backgroundColor: theme.color.neutral[600],
+    backgroundColor: theme.color.background.surface,
     marginHorizontal: theme.dimensions.p4,
   },
   activeDot: {
@@ -148,7 +148,7 @@ const createStyles = (theme: ITheme) => StyleSheet.create({
     paddingHorizontal: theme.dimensions.p24,
   },
   skipText: {
-    color: theme.color.neutral[400],
+    color: theme.color.button.primaryText,
   },
   nextButton: {
     backgroundColor: theme.color.white,
@@ -156,6 +156,6 @@ const createStyles = (theme: ITheme) => StyleSheet.create({
     paddingHorizontal: theme.dimensions.p24,
   },
   nextText: {
-    color: theme.color.neutral[900],
+    color: theme.color.text.primary,
   },
 });

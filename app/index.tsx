@@ -47,16 +47,16 @@ const createStyles = (theme: ITheme) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.color.neutral[900],
+    backgroundColor: theme.color.background.app,
   },
   title: {
     fontSize: theme.fontSize.p32,
     fontWeight: 'bold',
-    color: theme.color.textColor.white,
+    color: theme.color.text.primary,
     marginBottom: theme.dimensions.p8,
   },
   subtitle: {
     fontSize: theme.fontSize.p16,
-    color: theme.color.textColor.subText,
+    color: theme.color.text.secondary,
   },
 });
