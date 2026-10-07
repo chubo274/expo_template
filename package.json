@@ -10,6 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "lint:fix": "expo lint --fix",
+    "bump-version": "bun ./scripts/bump-version.js",
     "prepare": "husky"
   },
   "dependencies": {
